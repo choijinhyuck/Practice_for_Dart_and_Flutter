@@ -6,7 +6,7 @@ Future<void> Books (String first, String second) async {
   print("$second 두번째 문장");
 }
 
-void main () {
-  Books("Dart","Flutter");
-  Books("Python","FastAPI");
+void main () async {
+  await Books("Dart","Flutter");
+  await Books("Python","FastAPI");
 }
