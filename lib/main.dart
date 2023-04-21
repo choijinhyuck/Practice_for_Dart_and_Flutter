@@ -1,20 +1,12 @@
-class books<T> {
-  T book;
-  books({ required this.book });
-  void p_books() {
-    print(this.book);
-  }
+Future<void> Books (String first, String second) async {
+  print("$first 처음 문장");
+  await Future.delayed(Duration(seconds:3),(){
+    print("$first 이건 await 문장");
+  });
+  print("$second 두번째 문장");
 }
 
 void main () {
-  final MyBook = books<List<String>>(book :["Flutter","Flask","END"])
-                  ..p_books()
-                  ..p_books();
-  print("한 턴 쉬고");
-  MyBook
-    ..p_books()
-    ..p_books()
-    ..p_books()
-    ..book = ["changed book list"]
-    ..p_books();
+  Books("Dart","Flutter");
+  Books("Python","FastAPI");
 }
