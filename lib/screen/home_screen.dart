@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  DateTime firstDay = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -14,19 +22,56 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _DDay(),
+            _DDay(
+              onRamenPressed: onRamenPressed,
+              firstDay: firstDay,
+            ),
             _CoupleImage(),
           ],
         ),
       ),
     );
   }
+
+  void onRamenPressed() {
+    showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            color: Colors.white,
+            height: 300,
+            child: CupertinoDatePicker(
+              maximumDate: DateTime.now().add(Duration(seconds: 1)),
+              mode: CupertinoDatePickerMode.date,
+              onDateTimeChanged: (DateTime date) {
+                setState(() {
+                  firstDay = date;
+                });
+              },
+            ),
+          ),
+        );
+      },
+      barrierDismissible: true,
+    );
+  }
 }
 
 class _DDay extends StatelessWidget {
+  final GestureTapCallback onRamenPressed;
+  final DateTime firstDay;
+
+  _DDay({
+    required this.onRamenPressed,
+    required this.firstDay,
+  });
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final now = DateTime.now();
 
     return Column(
       children: [
@@ -34,7 +79,7 @@ class _DDay extends StatelessWidget {
           height: 16.0,
         ),
         Text(
-          '┬ *등심',
+          '*계란*양은',
           style: textTheme.displayLarge,
         ),
         const SizedBox(
@@ -45,7 +90,7 @@ class _DDay extends StatelessWidget {
           style: textTheme.bodyLarge,
         ),
         Text(
-          '2개 끓여?',
+          '${firstDay.year}.${firstDay.month}.${firstDay.day}',
           style: textTheme.bodyMedium,
         ),
         const SizedBox(
@@ -53,7 +98,7 @@ class _DDay extends StatelessWidget {
         ),
         IconButton(
           iconSize: 60.0,
-          onPressed: () {},
+          onPressed: onRamenPressed,
           icon: Icon(
             Icons.ramen_dining,
             color: Colors.red,
@@ -63,7 +108,7 @@ class _DDay extends StatelessWidget {
           height: 16.0,
         ),
         Text(
-          '먹은 지 3일',
+          'D+${DateTime(now.year, now.month, now.day).difference(DateTime(firstDay.year, firstDay.month, firstDay.day)).inDays + 1}',
           style: textTheme.displayMedium,
         ),
       ],
@@ -74,11 +119,13 @@ class _DDay extends StatelessWidget {
 class _CoupleImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Image.asset(
-        'assets/images/ramyeon_transparent.png',
-        // fit: BoxFit.cover,
-        height: MediaQuery.of(context).size.height / 2,
+    return Expanded(
+      child: Center(
+        child: Image.asset(
+          'assets/images/ramyeon_transparent.png',
+          // fit: BoxFit.cover,
+          height: MediaQuery.of(context).size.height / 2,
+        ),
       ),
     );
   }
